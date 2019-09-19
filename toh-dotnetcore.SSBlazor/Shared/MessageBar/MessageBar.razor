@@ -1,0 +1,29 @@
+﻿@namespace toh_dotnetcore.SSBlazor.Shared
+@inject MessageState MessageState
+
+@if (MessageState.Messages.Any())
+{
+    <div>
+        <h2>Messages</h2>
+        <button class="clear" @onclick="MessageState.ClearMessages">
+            clear
+        </button>
+        <br /><br />
+        @foreach (var message in MessageState.Messages)
+        {
+            <div>
+                @message
+            </div>
+        }
+    </div>
+}
+
+@code {
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Let me know when the the message state has changed
+        // When it does, call my StateHasChanged method for me
+        MessageState.NotifyStateHasChanged = StateHasChanged;
+    }
+}

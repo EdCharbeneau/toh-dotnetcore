@@ -3,7 +3,7 @@
 
 @using tohdotnetcore.domain
 @inject IHeroService HeroService
-
+@inject MessageState MessageState
 <h3>Top Heroes</h3>
 @if (heros == null)
 {
@@ -37,39 +37,17 @@ else
     </BlazoredTypeahead>
 </div>
 
-@if (MessageState.Messages.Count > -1)
-{
-    <div>
-        <h2>Messages</h2>
-        <button class="clear" @onclick="ClearMessages">
-            clear
-        </button>
-        <br /><br />
-        @foreach (var message in MessageState.Messages)
-        {
-            <div>
-                @message
-            </div>
-        }
-    </div>
-}
-
-
 @code {
-    [CascadingParameter] MessageBar MessageState { get; set; }
     List<Hero> heros;
 
     protected override async Task OnInitializedAsync()
     {
+        MessageState.NotifyStateHasChanged = StateHasChanged;
         heroResults = new List<Hero>();
         heros = await HeroService.GetHeros();
-        MessageState.Messages.Add("Hero Service: fetched heros");
+        MessageState.AddMesage("Hero Service: fetched heros");
     }
 
-    void ClearMessages()
-    {
-        MessageState.Messages.Clear();
-    }
     private Hero SelectedHero;
 
     [Parameter] public List<Hero> heroResults { get; set; }
@@ -82,7 +60,7 @@ else
         }
         catch
         {
-            MessageState.Messages.Add("Hero Service: Exception");
+            MessageState.AddMesage("Hero Service: Exception");
         }
             return new List<Hero>();
     }

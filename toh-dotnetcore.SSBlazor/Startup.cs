@@ -24,7 +24,7 @@ namespace toh_dotnetcore.SSBlazor
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddTransient<IHeroService, HeroService>();
-            services.AddScoped<MessageState>();
+            services.AddScoped<Shared.MessageState>();
 
             services.AddWebEncoders();
             services.AddApplicationInsightsTelemetry();

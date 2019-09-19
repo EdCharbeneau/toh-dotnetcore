@@ -1,7 +1,7 @@
 ﻿@page "/heroes"
 @using tohdotnetcore.domain
 @inject IHeroService HeroService
-
+@inject MessageState MessageState
 <h2>My Heroes</h2>
 
 <div>
@@ -30,28 +30,8 @@
     }
 </ul>
 
-@if (MessageState.Messages.Count > -1)
-{
-<div>
-    <h2>Messages</h2>
-    <button class="clear" @onclick="ClearMessages">
-        clear
-    </button>
-    <br /><br />
-    @foreach (var message in MessageState.Messages)
-    {
-        <div>
-            @message
-        </div>
-    }
-</div>
-}
-
-
 @code {
     List<Hero> heros;
-
-    [CascadingParameter] MessageBar MessageState { get; set; }
 
     [Parameter]
     public string heroName { get; set; }
@@ -67,18 +47,14 @@
         var hero = HeroService.CreateHero(new Hero { Name = heroName }).Result;
         heros.Add(hero);
         heroName = string.Empty;
-        MessageState.Messages.Add($"Hero Service: added hero {hero.Name}");
+        MessageState.AddMesage($"Hero Service: added hero {hero.Name}");
     }
 
     async Task DeleteHero(Hero hero)
     {
         await HeroService.DeleteHero(hero);
         heros.Remove(hero);
-        MessageState.Messages.Add($"Hero Service: deleted hero {hero.Name}");
+        MessageState.AddMesage($"Hero Service: deleted hero {hero.Name}");
     }
 
-    void ClearMessages()
-    {
-        MessageState.Messages.Clear();
-    }
 }
